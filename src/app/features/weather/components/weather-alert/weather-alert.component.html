@@ -1,0 +1,35 @@
+<div *ngIf="alert && !isExpired" class="weather-alert" [ngClass]="severityClass" data-testid="weather-alert-container">
+  <div class="alert-header">
+    <div class="alert-title">
+      <span class="alert-type" data-testid="weather-alert-type">{{ alert.type }}</span>
+      <span class="alert-severity" data-testid="weather-alert-severity">{{ alert.severity }}</span>
+    </div>
+    <button class="dismiss-btn" (click)="onDismiss()" data-testid="weather-alert-dismiss-btn" aria-label="Dismiss alert">
+      ✕
+    </button>
+  </div>
+
+  <div class="alert-content">
+    <p class="alert-description" data-testid="weather-alert-description">{{ alert.description }}</p>
+    
+    <div class="alert-details">
+      <div class="detail-item">
+        <span class="detail-label">Location:</span>
+        <span class="detail-value" data-testid="weather-alert-location">{{ alert.location }}</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label">Time Remaining:</span>
+        <span class="detail-value" data-testid="weather-alert-time-remaining">{{ getTimeRemaining() }}</span>
+      </div>
+    </div>
+
+    <div *ngIf="alert.affectedDevices && alert.affectedDevices.length > 0" class="affected-devices">
+      <span class="devices-label">Affected Devices:</span>
+      <div class="device-list">
+        <span *ngFor="let device of alert.affectedDevices" class="device-tag" data-testid="weather-alert-device-tag">
+          {{ device }}
+        </span>
+      </div>
+    </div>
+  </div>
+</div>

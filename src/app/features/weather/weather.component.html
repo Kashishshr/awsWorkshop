@@ -1,0 +1,36 @@
+<div class="weather-container">
+  <div class="weather-header">
+    <h1>Weather Monitoring</h1>
+    <button (click)="refreshWeather()" [disabled]="(loading$ | async)">
+      Refresh
+    </button>
+  </div>
+
+  <div *ngIf="(error$ | async) as error" class="error-banner">
+    {{ error }}
+  </div>
+
+  <div *ngIf="(loading$ | async)" class="loading-spinner">
+    Loading weather data...
+  </div>
+
+  <div class="weather-content" *ngIf="!(loading$ | async)">
+    <!-- Weather Dashboard -->
+    <app-weather-dashboard
+      [weatherData]="(weatherData$ | async)"
+    ></app-weather-dashboard>
+
+    <!-- Weather Alerts -->
+    <div class="alerts-section" *ngIf="(alerts$ | async) as alerts">
+      <h2>Active Alerts ({{ alerts.length }})</h2>
+      <app-weather-alert
+        *ngFor="let alert of alerts"
+        [alert]="alert"
+        (dismiss)="dismissAlert(alert.id)"
+      ></app-weather-alert>
+    </div>
+
+    <!-- Weather Map -->
+    <app-weather-map [weatherData]="(weatherData$ | async)"></app-weather-map>
+  </div>
+</div>

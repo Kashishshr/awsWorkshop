@@ -1,0 +1,161 @@
+.weather-alert {
+  border-left: 4px solid;
+  border-radius: 4px;
+  padding: 16px;
+  margin-bottom: 12px;
+  background-color: #f5f5f5;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+
+  &.severity-critical {
+    border-left-color: #d32f2f;
+    background-color: #ffebee;
+  }
+
+  &.severity-high {
+    border-left-color: #f57c00;
+    background-color: #fff3e0;
+  }
+
+  &.severity-moderate {
+    border-left-color: #fbc02d;
+    background-color: #fffde7;
+  }
+
+  &.severity-low {
+    border-left-color: #388e3c;
+    background-color: #f1f8e9;
+  }
+}
+
+.alert-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.alert-title {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.alert-type {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.alert-severity {
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 12px;
+  background-color: rgba(0, 0, 0, 0.1);
+  text-transform: uppercase;
+}
+
+.dismiss-btn {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+
+  &:active {
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+}
+
+.alert-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.alert-description {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #333;
+}
+
+.alert-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  font-size: 13px;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.detail-label {
+  font-weight: 500;
+  color: #666;
+}
+
+.detail-value {
+  color: #333;
+}
+
+.affected-devices {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.devices-label {
+  font-weight: 500;
+  font-size: 13px;
+  color: #666;
+}
+
+.device-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.device-tag {
+  display: inline-block;
+  padding: 4px 8px;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  font-size: 12px;
+  color: #333;
+}
+
+@media (max-width: 600px) {
+  .weather-alert {
+    padding: 12px;
+    margin-bottom: 8px;
+  }
+
+  .alert-details {
+    grid-template-columns: 1fr;
+  }
+
+  .alert-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .dismiss-btn {
+    align-self: flex-end;
+  }
+}

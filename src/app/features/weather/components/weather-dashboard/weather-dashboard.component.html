@@ -1,0 +1,118 @@
+<div class="weather-dashboard" data-testid="weather-dashboard-container">
+  <!-- Loading State -->
+  <div *ngIf="loading$ | async" class="loading-state" data-testid="weather-dashboard-loading">
+    <div class="spinner"></div>
+    <p>Loading weather data...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error$ | async as error" class="error-state" data-testid="weather-dashboard-error">
+    <p class="error-message">{{ error }}</p>
+    <button (click)="onRefresh()" class="retry-btn" data-testid="weather-dashboard-retry-btn">
+      Retry
+    </button>
+  </div>
+
+  <!-- Dashboard Content -->
+  <div *ngIf="!(loading$ | async) && !(error$ | async)" class="dashboard-content">
+    <!-- Header -->
+    <div class="dashboard-header">
+      <h1 class="dashboard-title">Weather Dashboard</h1>
+      <div class="header-controls">
+        <button (click)="onRefresh()" class="refresh-btn" data-testid="weather-dashboard-refresh-btn" title="Refresh weather data">
+          🔄 Refresh
+        </button>
+        <div class="auto-refresh-control">
+          <label for="auto-refresh-toggle" class="auto-refresh-label">Auto Refresh:</label>
+          <input
+            id="auto-refresh-toggle"
+            type="checkbox"
+            [checked]="autoRefresh$ | async"
+            (change)="onToggleAutoRefresh($event.target.checked)"
+            data-testid="weather-dashboard-auto-refresh-toggle"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Current Weather -->
+    <div class="current-weather-section" *ngIf="currentWeather$ | async as weather" data-testid="weather-dashboard-current-weather">
+      <h2 class="section-title">Current Weather</h2>
+      <div class="weather-card">
+        <div class="weather-main">
+          <div class="temperature" data-testid="weather-dashboard-temperature">
+            {{ weather.temperature }}°C
+          </div>
+          <div class="condition" data-testid="weather-dashboard-condition">
+            {{ weather.condition }}
+          </div>
+        </div>
+        <div class="weather-details">
+          <div class="detail">
+            <span class="label">Humidity:</span>
+            <span class="value" data-testid="weather-dashboard-humidity">{{ weather.humidity }}%</span>
+          </div>
+          <div class="detail">
+            <span class="label">Wind Speed:</span>
+            <span class="value" data-testid="weather-dashboard-wind-speed">{{ weather.windSpeed }} km/h</span>
+          </div>
+          <div class="detail">
+            <span class="label">Pressure:</span>
+            <span class="value" data-testid="weather-dashboard-pressure">{{ weather.pressure }} hPa</span>
+          </div>
+          <div class="detail">
+            <span class="label">Location:</span>
+            <span class="value" data-testid="weather-dashboard-location">{{ weather.location }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Critical Alerts -->
+    <div class="alerts-section" *ngIf="(criticalAlerts$ | async)?.length" data-testid="weather-dashboard-critical-alerts">
+      <h2 class="section-title critical">⚠️ Critical Alerts</h2>
+      <div class="alerts-list">
+        <app-weather-alert
+          *ngFor="let alert of criticalAlerts$ | async"
+          [alert]="alert"
+          (dismiss)="onDismissAlert(alert)"
+          data-testid="weather-dashboard-critical-alert-item"
+        ></app-weather-alert>
+      </div>
+    </div>
+
+    <!-- Active Alerts -->
+    <div class="alerts-section" *ngIf="(activeAlerts$ | async)?.length" data-testid="weather-dashboard-active-alerts">
+      <h2 class="section-title">Active Alerts</h2>
+      <div class="alerts-list">
+        <app-weather-alert
+          *ngFor="let alert of activeAlerts$ | async"
+          [alert]="alert"
+          (dismiss)="onDismissAlert(alert)"
+          data-testid="weather-dashboard-alert-item"
+        ></app-weather-alert>
+      </div>
+    </div>
+
+    <!-- No Alerts -->
+    <div *ngIf="!(activeAlerts$ | async)?.length && !(criticalAlerts$ | async)?.length" class="no-alerts" data-testid="weather-dashboard-no-alerts">
+      <p>No active weather alerts</p>
+    </div>
+
+    <!-- Refresh Interval Control -->
+    <div class="refresh-interval-control" *ngIf="autoRefresh$ | async" data-testid="weather-dashboard-refresh-interval">
+      <label for="refresh-interval-select" class="interval-label">Refresh Interval:</label>
+      <select
+        id="refresh-interval-select"
+        [value]="refreshInterval$ | async"
+        (change)="onSetRefreshInterval($event.target.value)"
+        data-testid="weather-dashboard-refresh-interval-select"
+      >
+        <option value="30000">30 seconds</option>
+        <option value="60000">1 minute</option>
+        <option value="300000">5 minutes</option>
+        <option value="600000">10 minutes</option>
+      </select>
+    </div>
+  </div>
+</div>

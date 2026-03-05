@@ -1,0 +1,34 @@
+# AI-DLC Documentation (local development only)
+aidlc-docs/
+
+# IDE and Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Node/npm
+node_modules/
+npm-debug.log
+yarn-error.log
+dist/
+build/
+
+# Angular
+.angular/
+angular.json.bak
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Misc
+*.log
+*.tmp
