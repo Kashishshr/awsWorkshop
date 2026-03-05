@@ -52,10 +52,11 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// API routes (to be implemented)
+// API routes
 app.use('/api/auth', require('./routes/auth.routes'));
 app.use('/api/users', require('./routes/users.routes'));
 app.use('/api/health', require('./routes/health.routes'));
+app.use('/api/weather', require('./routes/weather.routes'));
 
 // 404 handler
 app.use((req, res) => {

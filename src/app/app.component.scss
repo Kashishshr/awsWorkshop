@@ -1,0 +1,169 @@
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.app-header {
+  background: rgba(0, 0, 0, 0.3);
+  color: white;
+  padding: 40px 20px;
+  text-align: center;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+
+  h1 {
+    margin: 0;
+    font-size: 2.5em;
+    font-weight: 700;
+  }
+
+  p {
+    margin: 10px 0 0 0;
+    font-size: 1.1em;
+    opacity: 0.9;
+  }
+}
+
+.app-main {
+  flex: 1;
+  padding: 40px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.status-card,
+.features-card,
+.api-card,
+.info-card {
+  background: white;
+  border-radius: 8px;
+  padding: 30px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  h2 {
+    margin: 0 0 20px 0;
+    color: #333;
+    font-size: 1.5em;
+    border-bottom: 2px solid #667eea;
+    padding-bottom: 10px;
+  }
+}
+
+.status-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  .status-label {
+    font-weight: 600;
+    color: #666;
+  }
+
+  .status-value {
+    font-weight: 600;
+
+    &.online {
+      color: #4caf50;
+    }
+  }
+}
+
+.features-card ul,
+.info-card ul {
+  list-style: none;
+  padding: 0;
+
+  li {
+    padding: 10px 0;
+    color: #555;
+    font-size: 1.05em;
+
+    &:before {
+      content: '✓ ';
+      color: #4caf50;
+      font-weight: bold;
+      margin-right: 8px;
+    }
+  }
+}
+
+.endpoint {
+  background: #f5f5f5;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 4px;
+  border-left: 4px solid #667eea;
+
+  code {
+    display: block;
+    background: #333;
+    color: #4caf50;
+    padding: 10px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    margin-bottom: 8px;
+    overflow-x: auto;
+  }
+
+  p {
+    margin: 0;
+    color: #666;
+    font-size: 0.95em;
+  }
+}
+
+.info-card {
+  background: #f0f4ff;
+  border-left: 4px solid #667eea;
+
+  p {
+    color: #555;
+    line-height: 1.6;
+    margin: 10px 0;
+  }
+
+  ul {
+    margin: 15px 0;
+  }
+
+  strong {
+    color: #667eea;
+  }
+}
+
+.app-footer {
+  background: rgba(0, 0, 0, 0.3);
+  color: white;
+  text-align: center;
+  padding: 20px;
+  border-top: 2px solid rgba(255, 255, 255, 0.2);
+
+  p {
+    margin: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-header h1 {
+    font-size: 1.8em;
+  }
+
+  .app-main {
+    padding: 20px 10px;
+  }
+
+  .status-card,
+  .features-card,
+  .api-card,
+  .info-card {
+    padding: 20px;
+  }
+}

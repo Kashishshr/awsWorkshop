@@ -29,14 +29,9 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss",
-              "node_modules/leaflet/dist/leaflet.css",
-              "node_modules/animate.css/animate.min.css",
-              "node_modules/font-awesome/css/font-awesome.min.css"
+              "src/styles.scss"
             ],
-            "scripts": [
-              "node_modules/leaflet/dist/leaflet.js"
-            ]
+            "scripts": []
           },
           "configurations": {
             "production": {
