@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { WeatherState } from '../../store/weather.state';
@@ -21,8 +21,16 @@ export class WeatherMapComponent implements OnInit {
   map: any;
   weatherMarker: any;
   alertMarkers: any[] = [];
+  isDarkTheme = true;
+  showLabels = true;
+  tileLayer: any;
+  currentBasemap = 'terrain'; // terrain, dark, light, satellite, watercolor
+  showBasemapSelector = false;
 
-  constructor(private store: Store<{ weather: WeatherState }>) {
+  constructor(
+    private store: Store<{ weather: WeatherState }>,
+    private cdr: ChangeDetectorRef
+  ) {
     this.currentWeather$ = this.store.select(WeatherSelectors.selectCurrentWeather);
     this.activeAlerts$ = this.store.select(WeatherSelectors.selectActiveAlerts);
   }
@@ -34,12 +42,73 @@ export class WeatherMapComponent implements OnInit {
 
   private initializeMap(): void {
     // Initialize map with default center (will be updated with weather data)
-    this.map = L.map('map-container').setView([20, 0], 4);
+    this.map = L.map('map-container', {
+      zoomControl: false, // We'll add custom controls
+      attributionControl: true,
+    }).setView([20, 0], 4);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap contributors',
-      maxZoom: 19,
-    }).addTo(this.map);
+    // Apply initial theme
+    this.applyMapTheme();
+  }
+
+  private applyMapTheme(): void {
+    // Remove existing tile layer if present
+    if (this.tileLayer) {
+      this.map.removeLayer(this.tileLayer);
+    }
+
+    // Select basemap based on current selection
+    switch (this.currentBasemap) {
+      case 'terrain':
+        // Terrain with hillshading - similar to Felt's beautiful terrain view
+        this.tileLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/tile/{z}/{y}/{x}', {
+          attribution: '© Esri, USGS, NOAA',
+          maxZoom: 13,
+        });
+        this.isDarkTheme = false;
+        break;
+      
+      case 'satellite':
+        // Satellite imagery
+        this.tileLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+          attribution: '© Esri, DigitalGlobe, GeoEye, Earthstar Geographics, CNES/Airbus DS, USDA, USGS, AeroGRID, IGN',
+          maxZoom: 19,
+        });
+        this.isDarkTheme = true;
+        break;
+      
+      case 'watercolor':
+        // Artistic watercolor style
+        this.tileLayer = L.tileLayer('https://tiles.stadiamaps.com/tiles/stamen_watercolor/{z}/{x}/{y}.jpg', {
+          attribution: '© Stamen Design, © OpenStreetMap contributors',
+          maxZoom: 16,
+        });
+        this.isDarkTheme = false;
+        break;
+      
+      case 'dark':
+        // Dark theme using CartoDB Dark Matter
+        this.tileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+          attribution: '© OpenStreetMap contributors © CARTO',
+          maxZoom: 19,
+          subdomains: 'abcd',
+        });
+        this.isDarkTheme = true;
+        break;
+      
+      case 'light':
+      default:
+        // Light theme using CartoDB Positron
+        this.tileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+          attribution: '© OpenStreetMap contributors © CARTO',
+          maxZoom: 19,
+          subdomains: 'abcd',
+        });
+        this.isDarkTheme = false;
+        break;
+    }
+
+    this.tileLayer.addTo(this.map);
   }
 
   private subscribeToWeatherUpdates(): void {
@@ -141,5 +210,41 @@ export class WeatherMapComponent implements OnInit {
 
   onResetView(): void {
     this.map.setView([20, 0], 4);
+  }
+
+  toggleTheme(): void {
+    this.isDarkTheme = !this.isDarkTheme;
+    this.currentBasemap = this.isDarkTheme ? 'dark' : 'light';
+    this.applyMapTheme();
+    this.cdr.markForCheck();
+  }
+
+  toggleLabels(): void {
+    this.showLabels = !this.showLabels;
+    this.applyMapTheme();
+    this.cdr.markForCheck();
+  }
+
+  toggleBasemapSelector(): void {
+    this.showBasemapSelector = !this.showBasemapSelector;
+    this.cdr.markForCheck();
+  }
+
+  selectBasemap(basemap: string): void {
+    this.currentBasemap = basemap;
+    this.applyMapTheme();
+    this.showBasemapSelector = false;
+    this.cdr.markForCheck();
+  }
+
+  getBasemapName(): string {
+    const names: { [key: string]: string } = {
+      terrain: 'Terrain',
+      satellite: 'Satellite',
+      watercolor: 'Watercolor',
+      dark: 'Dark',
+      light: 'Light',
+    };
+    return names[this.currentBasemap] || 'Terrain';
   }
 }

@@ -1,41 +1,103 @@
-<div class="weather-map-container" data-testid="weather-map-container">
-  <div class="map-header">
-    <h2 class="map-title">Weather Map</h2>
-    <div class="map-controls">
-      <button (click)="onZoomIn()" class="control-btn" data-testid="weather-map-zoom-in-btn" title="Zoom in">
-        +
+<div class="weather-map-container" [class.dark-theme]="isDarkTheme" data-testid="weather-map-container">
+  <!-- Map Container -->
+  <div id="map-container" class="map" data-testid="weather-map-leaflet"></div>
+
+  <!-- Top Controls Bar -->
+  <div class="top-controls">
+    <div class="control-group left">
+      <h2 class="map-title">Weather Map</h2>
+    </div>
+    
+    <div class="control-group right">
+      <button 
+        (click)="toggleBasemapSelector()" 
+        class="control-btn basemap-btn" 
+        title="Change basemap"
+        data-testid="weather-map-basemap-toggle">
+        <span class="icon">🗺️</span>
+        <span class="basemap-label">{{ getBasemapName() }}</span>
       </button>
-      <button (click)="onZoomOut()" class="control-btn" data-testid="weather-map-zoom-out-btn" title="Zoom out">
-        −
-      </button>
-      <button (click)="onResetView()" class="control-btn" data-testid="weather-map-reset-view-btn" title="Reset view">
-        ⊙
+      
+      <button 
+        (click)="toggleTheme()" 
+        class="control-btn theme-toggle" 
+        [title]="isDarkTheme ? 'Switch to light theme' : 'Switch to dark theme'"
+        data-testid="weather-map-theme-toggle">
+        <span class="icon">{{ isDarkTheme ? '☀️' : '🌙' }}</span>
       </button>
     </div>
   </div>
 
-  <div id="map-container" class="map" data-testid="weather-map-leaflet"></div>
+  <!-- Basemap Selector Dropdown -->
+  <div class="basemap-selector" *ngIf="showBasemapSelector" data-testid="weather-map-basemap-selector">
+    <div class="basemap-option" (click)="selectBasemap('terrain')" [class.active]="currentBasemap === 'terrain'">
+      <div class="basemap-preview terrain"></div>
+      <span class="basemap-name">Terrain</span>
+      <span class="basemap-check" *ngIf="currentBasemap === 'terrain'">✓</span>
+    </div>
+    <div class="basemap-option" (click)="selectBasemap('satellite')" [class.active]="currentBasemap === 'satellite'">
+      <div class="basemap-preview satellite"></div>
+      <span class="basemap-name">Satellite</span>
+      <span class="basemap-check" *ngIf="currentBasemap === 'satellite'">✓</span>
+    </div>
+    <div class="basemap-option" (click)="selectBasemap('watercolor')" [class.active]="currentBasemap === 'watercolor'">
+      <div class="basemap-preview watercolor"></div>
+      <span class="basemap-name">Watercolor</span>
+      <span class="basemap-check" *ngIf="currentBasemap === 'watercolor'">✓</span>
+    </div>
+    <div class="basemap-option" (click)="selectBasemap('dark')" [class.active]="currentBasemap === 'dark'">
+      <div class="basemap-preview dark"></div>
+      <span class="basemap-name">Dark</span>
+      <span class="basemap-check" *ngIf="currentBasemap === 'dark'">✓</span>
+    </div>
+    <div class="basemap-option" (click)="selectBasemap('light')" [class.active]="currentBasemap === 'light'">
+      <div class="basemap-preview light"></div>
+      <span class="basemap-name">Light</span>
+      <span class="basemap-check" *ngIf="currentBasemap === 'light'">✓</span>
+    </div>
+  </div>
 
+  <!-- Zoom Controls (Right Side) -->
+  <div class="zoom-controls">
+    <button (click)="onZoomIn()" class="zoom-btn" data-testid="weather-map-zoom-in-btn" title="Zoom in">
+      <span class="icon">+</span>
+    </button>
+    <div class="zoom-divider"></div>
+    <button (click)="onZoomOut()" class="zoom-btn" data-testid="weather-map-zoom-out-btn" title="Zoom out">
+      <span class="icon">−</span>
+    </button>
+    <div class="zoom-divider"></div>
+    <button (click)="onResetView()" class="zoom-btn" data-testid="weather-map-reset-view-btn" title="Reset view">
+      <span class="icon">⊙</span>
+    </button>
+  </div>
+
+  <!-- Legend (Bottom Left) -->
   <div class="map-legend">
-    <div class="legend-item">
-      <span class="legend-icon weather-icon">🌡️</span>
-      <span class="legend-label">Current Weather</span>
+    <div class="legend-header">
+      <span class="legend-title">Legend</span>
     </div>
-    <div class="legend-item">
-      <span class="legend-icon alert-icon critical">⚠️</span>
-      <span class="legend-label">Critical Alert</span>
-    </div>
-    <div class="legend-item">
-      <span class="legend-icon alert-icon high">⚠️</span>
-      <span class="legend-label">High Alert</span>
-    </div>
-    <div class="legend-item">
-      <span class="legend-icon alert-icon moderate">⚠️</span>
-      <span class="legend-label">Moderate Alert</span>
-    </div>
-    <div class="legend-item">
-      <span class="legend-icon alert-icon low">⚠️</span>
-      <span class="legend-label">Low Alert</span>
+    <div class="legend-items">
+      <div class="legend-item">
+        <span class="legend-icon weather-icon">🌡️</span>
+        <span class="legend-label">Current Weather</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-icon alert-icon critical"></span>
+        <span class="legend-label">Critical</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-icon alert-icon high"></span>
+        <span class="legend-label">High</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-icon alert-icon moderate"></span>
+        <span class="legend-label">Moderate</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-icon alert-icon low"></span>
+        <span class="legend-label">Low</span>
+      </div>
     </div>
   </div>
 </div>
